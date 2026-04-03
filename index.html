@@ -3,104 +3,154 @@
 <html>
 <head>
     <title>Smart Task Manager</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #141e30, #243b55);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+   <style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
 
-        .app {
-            background: #1c1c1c;
-            padding: 20px;
-            border-radius: 15px;
-            width: 350px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+/* Animated gradient glow */
+body::before {
+    content: "";
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #00c6ff, transparent);
+    top: -100px;
+    left: -100px;
+    filter: blur(120px);
+    animation: move 10s infinite alternate;
+}
 
-        h1 {
-            text-align: center;
-        }
+body::after {
+    content: "";
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #ff6ec4, transparent);
+    bottom: -100px;
+    right: -100px;
+    filter: blur(120px);
+    animation: move 12s infinite alternate-reverse;
+}
 
-        .input-section {
-            display: flex;
-            gap: 10px;
-        }
+@keyframes move {
+    from { transform: translate(0,0); }
+    to { transform: translate(100px, 100px); }
+}
 
-        input {
-            flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            outline: none;
-        }
+/* Glass card */
+.app {
+    position: relative;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    padding: 20px;
+    border-radius: 20px;
+    width: 360px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    color: white;
+    z-index: 1;
+}
 
-        button {
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+h1 {
+    text-align: center;
+    margin-bottom: 15px;
+}
 
-        .add-btn {
-            background: #00c853;
-            color: white;
-        }
+.input-section {
+    display: flex;
+    gap: 10px;
+}
 
-        .add-btn:hover {
-            background: #00e676;
-        }
+input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
 
-        .filters {
-            margin-top: 15px;
-            text-align: center;
-        }
+input::placeholder {
+    color: #ccc;
+}
 
-        .filters button {
-            margin: 3px;
-            background: #333;
-            color: white;
-        }
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
 
-        .filters button.active {
-            background: #00c853;
-        }
+/* Gradient button */
+.add-btn {
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: white;
+}
 
-        .task {
-            background: #2a2a2a;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.add-btn:hover {
+    transform: scale(1.05);
+}
 
-        .task span {
-            cursor: pointer;
-        }
+/* Filters */
+.filters {
+    margin-top: 15px;
+    text-align: center;
+}
 
-        .done {
-            text-decoration: line-through;
-            color: gray;
-        }
+.filters button {
+    margin: 3px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
 
-        .actions button {
-            margin-left: 5px;
-            background: #444;
-            color: white;
-        }
+.filters button.active {
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+}
 
-        .actions button:hover {
-            background: #666;
-        }
-    </style>
+/* Tasks */
+.task {
+    background: rgba(255,255,255,0.08);
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.2s;
+}
+
+.task:hover {
+    transform: scale(1.02);
+}
+
+.task span {
+    cursor: pointer;
+}
+
+.done {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.actions button {
+    margin-left: 5px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+}
+
+.actions button:hover {
+    background: rgba(255,255,255,0.3);
+}
+</style>
 </head>
 <body>
 
