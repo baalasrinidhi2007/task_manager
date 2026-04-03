@@ -1,57 +1,140 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Task Manager</title>
+    <title>Smart Task Manager</title>
     <style>
         body {
-            font-family: Arial;
-            background: #121212;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #141e30, #243b55);
             color: white;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .app {
+            background: #1c1c1c;
+            padding: 20px;
+            border-radius: 15px;
+            width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         h1 {
-            margin-top: 20px;
+            text-align: center;
+        }
+
+        .input-section {
+            display: flex;
+            gap: 10px;
         }
 
         input {
+            flex: 1;
             padding: 10px;
-            width: 250px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
         }
 
         button {
             padding: 10px;
-            margin: 5px;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .add-btn {
+            background: #00c853;
+            color: white;
+        }
+
+        .add-btn:hover {
+            background: #00e676;
+        }
+
+        .filters {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .filters button {
+            margin: 3px;
+            background: #333;
+            color: white;
+        }
+
+        .filters button.active {
+            background: #00c853;
         }
 
         .task {
-            margin: 10px;
+            background: #2a2a2a;
+            margin-top: 10px;
             padding: 10px;
-            background: #1e1e1e;
-            border-radius: 5px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task span {
+            cursor: pointer;
         }
 
         .done {
             text-decoration: line-through;
             color: gray;
         }
+
+        .actions button {
+            margin-left: 5px;
+            background: #444;
+            color: white;
+        }
+
+        .actions button:hover {
+            background: #666;
+        }
     </style>
 </head>
 <body>
 
-<h1>📋 Task Manager</h1>
+<div class="app">
+    <h1>🧠 Task Manager</h1>
 
-<input type="text" id="taskInput" placeholder="Enter task">
-<button onclick="addTask()">Add</button>
+    <div class="input-section">
+        <input id="taskInput" placeholder="Add a task...">
+        <button class="add-btn" onclick="addTask()">+</button>
+    </div>
 
-<div id="taskList"></div>
+    <div class="filters">
+        <button onclick="setFilter('all')" class="active">All</button>
+        <button onclick="setFilter('active')">Active</button>
+        <button onclick="setFilter('done')">Completed</button>
+    </div>
+
+    <div id="taskList"></div>
+</div>
 
 <script>
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let filter = "all";
 
 function saveTasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function setFilter(type) {
+    filter = type;
+
+    document.querySelectorAll(".filters button").forEach(btn => btn.classList.remove("active"));
+    event.target.classList.add("active");
+
+    displayTasks();
 }
 
 function displayTasks() {
@@ -59,6 +142,10 @@ function displayTasks() {
     list.innerHTML = "";
 
     tasks.forEach((task, index) => {
+
+        if (filter === "active" && task.done) return;
+        if (filter === "done" && !task.done) return;
+
         let div = document.createElement("div");
         div.className = "task";
 
@@ -72,26 +159,35 @@ function displayTasks() {
             displayTasks();
         };
 
+        let actions = document.createElement("div");
+        actions.className = "actions";
+
         let del = document.createElement("button");
-        del.innerText = "Delete";
+        del.innerText = "🗑";
         del.onclick = () => {
             tasks.splice(index, 1);
             saveTasks();
             displayTasks();
         };
 
+        actions.appendChild(del);
+
         div.appendChild(text);
-        div.appendChild(del);
+        div.appendChild(actions);
+
         list.appendChild(div);
     });
 }
 
 function addTask() {
     let input = document.getElementById("taskInput");
-    if (input.value === "") return;
+
+    if (input.value.trim() === "") return;
 
     tasks.push({ text: input.value, done: false });
+
     input.value = "";
+
     saveTasks();
     displayTasks();
 }
