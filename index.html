@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #121212;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        input {
+            padding: 10px;
+            width: 250px;
+        }
+
+        button {
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .task {
+            margin: 10px;
+            padding: 10px;
+            background: #1e1e1e;
+            border-radius: 5px;
+        }
+
+        .done {
+            text-decoration: line-through;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📋 Task Manager</h1>
+
+<input type="text" id="taskInput" placeholder="Enter task">
+<button onclick="addTask()">Add</button>
+
+<div id="taskList"></div>
+
+<script>
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function displayTasks() {
+    let list = document.getElementById("taskList");
+    list.innerHTML = "";
+
+    tasks.forEach((task, index) => {
+        let div = document.createElement("div");
+        div.className = "task";
+
+        let text = document.createElement("span");
+        text.innerText = task.text;
+        if (task.done) text.classList.add("done");
+
+        text.onclick = () => {
+            tasks[index].done = !tasks[index].done;
+            saveTasks();
+            displayTasks();
+        };
+
+        let del = document.createElement("button");
+        del.innerText = "Delete";
+        del.onclick = () => {
+            tasks.splice(index, 1);
+            saveTasks();
+            displayTasks();
+        };
+
+        div.appendChild(text);
+        div.appendChild(del);
+        list.appendChild(div);
+    });
+}
+
+function addTask() {
+    let input = document.getElementById("taskInput");
+    if (input.value === "") return;
+
+    tasks.push({ text: input.value, done: false });
+    input.value = "";
+    saveTasks();
+    displayTasks();
+}
+
+displayTasks();
+</script>
+
+</body>
+</html>
